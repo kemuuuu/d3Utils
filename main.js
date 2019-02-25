@@ -9,4 +9,4 @@ const tenant = 'zzz'
 
 const conn = new Connector()
 conn.auth(uid, upw, tenant)
-.then(() => conn.getWork())
+.then(() => conn.getWork(uid, upw))

@@ -59,17 +59,21 @@ Connector.prototype.auth = (uid, upw, tenant) => {
 /**
  * ワーク一覧取得
  */
-Connector.prototype.getWork = () => {
+Connector.prototype.getWork = (uid, upw) => {
   
   const self = this
-  
+  const param = querystring.stringify({
+    'uid': uid,
+    'upw': upw
+  })
   const options = {
     hostname: 'd3w.ap.oproarts.com',
     path: `/d3w/api/${self.tenant}/conf/works`,
     port: 443,
     method: 'POST',
     headers: {
-      'Cookie': self.sessionID
+      'Content-Type': 'application/x-www-form-urlencoded',
+      'Content-Length': Buffer.byteLength(self.authData)
     }
   }
   console.log(options)
@@ -85,6 +89,7 @@ Connector.prototype.getWork = () => {
   req.on('error', err => {
     console.error(`ERROR: ${err}`)
   })
+  req.write(param)
   req.end()
 }
 
