@@ -57,6 +57,37 @@ Connector.prototype.auth = (uid, upw, tenant) => {
 }
 
 /**
+ * ワーク一覧取得 SessionID
+ */
+Connector.prototype.getWorkWithSessionId = () => {
+  
+  const self = this
+  const options = {
+    hostname: 'd3w.ap.oproarts.com',
+    path: `/d3w/api/${self.tenant}/conf/works`,
+    port: 443,
+    method: 'POST',
+    headers: {
+      'Cookie': self.sessionID
+    }
+  }
+  
+  const req = http.request(options, res => {
+    console.log(`STATUS: ${res.statusCode}`)
+    console.log(`HEADERS: ${JSON.stringify(res.headers)}`)
+    res.setEncoding('utf8')
+    res.on('data', (chunk) => {
+      console.log(`BODY: ${chunk}`)
+    })
+    res.on('end', () => {console.log('No more data')})
+  })
+  req.on('error', err => {
+    console.error(`ERROR: ${err}`)
+  })
+  req.end()
+}
+
+/**
  * ワーク一覧取得
  */
 Connector.prototype.getWork = (uid, upw) => {
@@ -76,7 +107,7 @@ Connector.prototype.getWork = (uid, upw) => {
       'Content-Length': Buffer.byteLength(self.authData)
     }
   }
-  console.log(options)
+  
   const req = http.request(options, res => {
     console.log(`STATUS: ${res.statusCode}`)
     console.log(`HEADERS: ${JSON.stringify(res.headers)}`)
